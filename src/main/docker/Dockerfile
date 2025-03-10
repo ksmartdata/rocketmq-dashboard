@@ -17,7 +17,7 @@
 
 FROM schnell18/zulu-java:alpine-jre8-0.2.0
 VOLUME /tmp
-ADD rocketmq-dashboard-*.jar rocketmq-dashboard.jar
+ADD target/rocketmq-dashboard-*.jar rocketmq-dashboard.jar
 RUN sh -c 'touch /rocketmq-dashboard.jar'
 ENV JAVA_OPTS=""
 
