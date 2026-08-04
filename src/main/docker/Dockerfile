@@ -29,4 +29,4 @@ RUN apk add --no-cache tzdata
 ENV TZ=Asia/Shanghai
 RUN ln -fs /usr/share/zoneinfo/$TZ /etc/localtime
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /rocketmq-dashboard.jar" ]
+ENTRYPOINT [ "sh", "-c", "java -Dfastjson.parser.safeMode=true $JAVA_OPTS -jar /rocketmq-dashboard.jar" ]
