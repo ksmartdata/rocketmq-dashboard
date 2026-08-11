@@ -15,7 +15,9 @@
 # limitations under the License.
 #
 
-FROM schnell18/zulu-java:alpine-jre8-0.2.0
+# schnell18/zulu-java is amd64-only; buildx silently falls back to amd64 layers
+# on arm64, producing images that fail with "exec format error" on ARM nodes
+FROM --platform=$TARGETPLATFORM bellsoft/liberica-openjdk-alpine-musl:8
 VOLUME /tmp
 ADD target/rocketmq-dashboard-*.jar rocketmq-dashboard.jar
 RUN sh -c 'touch /rocketmq-dashboard.jar'
