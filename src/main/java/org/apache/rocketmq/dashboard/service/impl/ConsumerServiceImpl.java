@@ -234,17 +234,24 @@ public class ConsumerServiceImpl extends AbstractCommonService implements Consum
 
     @Override
     public List<TopicConsumerInfo> queryConsumeStatsListByGroupName(String groupName, String address) {
-        ConsumeStats consumeStats;
+        List<ConsumeStats> consumeStatses = new ArrayList<>();
         String topic = null;
         try {
             String[] addresses = address.split(",");
-            String addr = addresses[0];
-            consumeStats = mqAdminExt.examineConsumeStats(addr, groupName, null, 3000);
+            for (String addr : addresses) {
+                consumeStatses.add(mqAdminExt.examineConsumeStats(addr, groupName, null, 3000));
+            }
         } catch (Exception e) {
             Throwables.throwIfUnchecked(e);
             throw new RuntimeException(e);
         }
-        return toTopicConsumerInfoList(topic, consumeStats, groupName);
+        List<TopicConsumerInfo> res = new ArrayList<>();
+        consumeStatses.forEach(consumeStats -> {
+            if (consumeStats != null && consumeStats.getOffsetTable() != null && !consumeStats.getOffsetTable().isEmpty()) {
+                res.addAll(toTopicConsumerInfoList(topic, consumeStats, groupName));
+            }
+        });
+        return res;
     }
 
     @Override
